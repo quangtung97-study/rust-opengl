@@ -1,0 +1,8 @@
+[package]
+name = "tutorial-01"
+version = "0.1.0"
+authors = ["quangtung97 <quangtung29121997@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+glium = "*"
