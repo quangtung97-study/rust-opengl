@@ -1,5 +1,6 @@
 use image;
 use std::io::Cursor;
+use nalgebra as na;
 
 use glium;
 use glium::{implement_vertex, uniform};
@@ -103,22 +104,21 @@ fn main() {
     let mut prev_instant = Instant::now();
     let mut t: f32 = -0.5;
     let mut closed = false;
+    let identity = na::Matrix4::new_scaling(1.0);
     while !closed {
         t += 0.0002;
         if t > 0.5 {
             t = -0.5;
         }
+        let matrix = identity.append_translation(
+            &na::Vector3::new(t, 0.0, 0.0));
 
         let mut target = display.draw();
         target.clear_color(0.0, 0.0, 0.0, 1.0);
 
+        let mat_ref: &[[f32; 4]; 4] = matrix.as_ref();
         let uniform_matrix = uniform! {
-            matrix: [
-                [1.0, 0.0, 0.0, 0.0],
-                [0.0, 1.0, 0.0, 0.0],
-                [0.0, 0.0, 1.0, 0.0],
-                [t  , 0.0, 0.0, 1.0f32],
-            ],
+            matrix: *mat_ref,
             tex: &texture,
         };
         target.draw(&vb, &indices, &program, 
